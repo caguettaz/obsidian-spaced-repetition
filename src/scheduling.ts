@@ -5,6 +5,7 @@ export enum ReviewResponse {
     Easy,
     Good,
     Hard,
+    Again,
     Reset,
 }
 
@@ -32,6 +33,9 @@ export function schedule(
             1,
             (interval + delayBeforeReview / 4) * settingsObj.lapsesIntervalChange,
         );
+    } else if (response === ReviewResponse.Again) {
+        ease = 130;
+        interval = 1;
     }
 
     // replaces random fuzz with load balancing over the fuzz interval

@@ -25,7 +25,7 @@
     height: 80%;
 }
 
-.sr-flashcard-input-area > textarea {
+.sr-flashcard-input-area>textarea {
     height: 100%;
 }
 
@@ -88,6 +88,7 @@
     height: 2px;
 }
 
+#sr-again-btn,
 #sr-hard-btn,
 #sr-good-btn,
 #sr-easy-btn {
@@ -95,6 +96,10 @@
     margin: auto;
     color: #ffffff;
     cursor: pointer;
+}
+
+#sr-again-btn {
+    background-color: #000000;
 }
 
 #sr-hard-btn {
@@ -149,6 +154,7 @@
         line-height: 60px;
     }
 
+    #sr-again-btn,
     #sr-hard-btn,
     #sr-good-btn,
     #sr-easy-btn {

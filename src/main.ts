@@ -154,6 +154,18 @@ export default class SRPlugin extends Plugin {
                                     this.saveReviewResponse(fileish, ReviewResponse.Hard);
                                 });
                         });
+
+                        menu.addItem((item) => {
+                            item.setTitle(
+                                t("REVIEW_DIFFICULTY_FILE_MENU", {
+                                    difficulty: this.data.settings.flashcardAgainText,
+                                }),
+                            )
+                                .setIcon("SpacedRepIcon")
+                                .onClick(() => {
+                                    this.saveReviewResponse(fileish, ReviewResponse.Again);
+                                });
+                        });
                     }
                 }),
             );
@@ -208,6 +220,20 @@ export default class SRPlugin extends Plugin {
                 }
             },
         });
+
+        this.addCommand({
+            id: "srs-note-review-again",
+            name: t("REVIEW_NOTE_DIFFICULTY_CMD", {
+                difficulty: this.data.settings.flashcardAgainText,
+            }),
+            callback: () => {
+                const openFile: TFile | null = this.app.workspace.getActiveFile();
+                if (openFile && openFile.extension === "md") {
+                    this.saveReviewResponse(openFile, ReviewResponse.Again);
+                }
+            },
+        });
+
 
         this.addCommand({
             id: "srs-review-flashcards",
@@ -486,9 +512,9 @@ export default class SRPlugin extends Plugin {
         if (this.data.settings.showDebugMessages) {
             console.log(
                 "SR: " +
-                    t("SYNC_TIME_TAKEN", {
-                        t: Date.now() - now.valueOf(),
-                    }),
+                t("SYNC_TIME_TAKEN", {
+                    t: Date.now() - now.valueOf(),
+                }),
             );
         }
 
@@ -647,8 +673,8 @@ export default class SRPlugin extends Plugin {
             fileText = fileText.replace(
                 SCHEDULING_INFO_REGEX,
                 `---\n${schedulingInfo[1]}sr-due: ${dueString}\n` +
-                    `sr-interval: ${interval}\nsr-ease: ${ease}\n` +
-                    `${schedulingInfo[5]}---`,
+                `sr-interval: ${interval}\nsr-ease: ${ease}\n` +
+                `${schedulingInfo[5]}---`,
             );
         } else if (YAML_FRONT_MATTER_REGEX.test(fileText)) {
             // new note with existing YAML front matter
@@ -656,7 +682,7 @@ export default class SRPlugin extends Plugin {
             fileText = fileText.replace(
                 YAML_FRONT_MATTER_REGEX,
                 `---\n${existingYaml[1]}sr-due: ${dueString}\n` +
-                    `sr-interval: ${interval}\nsr-ease: ${ease}\n---`,
+                `sr-interval: ${interval}\nsr-ease: ${ease}\n---`,
             );
         } else {
             fileText =

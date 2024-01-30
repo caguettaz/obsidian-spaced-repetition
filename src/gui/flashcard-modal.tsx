@@ -33,6 +33,7 @@ export class FlashcardModal extends Modal {
     public answerBtn: HTMLElement;
     public flashcardView: HTMLElement;
     private flashCardMenu: HTMLDivElement;
+    public againBtn: HTMLElement;
     public hardBtn: HTMLElement;
     public goodBtn: HTMLElement;
     public easyBtn: HTMLElement;
@@ -284,6 +285,7 @@ export class FlashcardModal extends Modal {
             this.responseDiv.addClass("sr-ignorestats-response");
             this.easyBtn.addClass("sr-ignorestats-btn");
             this.hardBtn.addClass("sr-ignorestats-btn");
+            this.againBtn.addClass("sr-ignorestats-btn");
         }
     }
 
@@ -298,6 +300,14 @@ export class FlashcardModal extends Modal {
 
     createResponseButtons() {
         this.responseDiv = this.contentEl.createDiv("sr-flashcard-response");
+
+        this.againBtn = document.createElement("button");
+        this.againBtn.setAttribute("id", "sr-again-btn");
+        this.againBtn.setText(this.settings.flashcardAgainText);
+        this.againBtn.addEventListener("click", () => {
+            this.processReview(ReviewResponse.Again);
+        });
+        this.responseDiv.appendChild(this.hardBtn);
 
         this.hardBtn = document.createElement("button");
         this.hardBtn.setAttribute("id", "sr-hard-btn");
@@ -464,9 +474,15 @@ export class FlashcardModal extends Modal {
 
         if (this.reviewMode == FlashcardReviewMode.Cram) {
             // Same for mobile/desktop
+            this.againBtn.setText(`${this.settings.flashcardAgainText}`);
             this.hardBtn.setText(`${this.settings.flashcardHardText}`);
             this.easyBtn.setText(`${this.settings.flashcardEasyText}`);
         } else {
+            this.setupEaseButton(
+                this.againBtn,
+                this.settings.flashcardAgainText,
+                ReviewResponse.Again,
+            );
             this.setupEaseButton(
                 this.hardBtn,
                 this.settings.flashcardHardText,

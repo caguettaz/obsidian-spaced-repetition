@@ -7,6 +7,7 @@ export interface SRSettings {
     flashcardEasyText: string;
     flashcardGoodText: string;
     flashcardHardText: string;
+    flashcardAgainText: string;
     flashcardTags: string[];
     convertFoldersToDecks: boolean;
     cardCommentOnSameLine: boolean;
@@ -50,6 +51,7 @@ export const DEFAULT_SETTINGS: SRSettings = {
     flashcardEasyText: t("EASY"),
     flashcardGoodText: t("GOOD"),
     flashcardHardText: t("HARD"),
+    flashcardAgainText: t("AGAIN"),
     flashcardTags: ["#flashcards"],
     convertFoldersToDecks: false,
     cardCommentOnSameLine: false,
@@ -292,18 +294,18 @@ export class SRSettingTab extends PluginSettingTab {
                 .addOptions(
                     deckOrderEnabled
                         ? {
-                              PrevDeckComplete_Sequential: t(
-                                  "REVIEW_DECK_ORDER_PREV_DECK_COMPLETE_SEQUENTIAL",
-                              ),
-                              PrevDeckComplete_Random: t(
-                                  "REVIEW_DECK_ORDER_PREV_DECK_COMPLETE_RANDOM",
-                              ),
-                          }
+                            PrevDeckComplete_Sequential: t(
+                                "REVIEW_DECK_ORDER_PREV_DECK_COMPLETE_SEQUENTIAL",
+                            ),
+                            PrevDeckComplete_Random: t(
+                                "REVIEW_DECK_ORDER_PREV_DECK_COMPLETE_RANDOM",
+                            ),
+                        }
                         : {
-                              EveryCardRandomDeckAndCard: t(
-                                  "REVIEW_DECK_ORDER_RANDOM_DECK_AND_CARD",
-                              ),
-                          },
+                            EveryCardRandomDeckAndCard: t(
+                                "REVIEW_DECK_ORDER_RANDOM_DECK_AND_CARD",
+                            ),
+                        },
                 )
                 .setValue(
                     deckOrderEnabled
@@ -510,6 +512,29 @@ export class SRSettingTab extends PluginSettingTab {
                     .onClick(async () => {
                         this.plugin.data.settings.flashcardHardText =
                             DEFAULT_SETTINGS.flashcardHardText;
+                        await this.plugin.savePluginData();
+                        this.display();
+                    });
+            });
+
+        new Setting(containerEl)
+            .setName(t("FLASHCARD_AGAIN_LABEL"))
+            .setDesc(t("FLASHCARD_AGAIN_DESC"))
+            .addText((text) =>
+                text.setValue(this.plugin.data.settings.flashcardAgainText).onChange((value) => {
+                    applySettingsUpdate(async () => {
+                        this.plugin.data.settings.flashcardAgainText = value;
+                        await this.plugin.savePluginData();
+                    });
+                }),
+            )
+            .addExtraButton((button) => {
+                button
+                    .setIcon("reset")
+                    .setTooltip(t("RESET_DEFAULT"))
+                    .onClick(async () => {
+                        this.plugin.data.settings.flashcardAgainText =
+                            DEFAULT_SETTINGS.flashcardAgainText;
                         await this.plugin.savePluginData();
                         this.display();
                     });
